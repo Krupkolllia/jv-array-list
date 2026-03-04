@@ -41,9 +41,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public void addAll(List<T> list) {
-        while (this.list.length < size + list.size()) {
-            this.list = grow();
-        }
+        ensureCapacity(size + list.size());
 
         for (int i = 0; i < list.size(); i++) {
             this.list[size + i] = list.get(i);
@@ -103,9 +101,21 @@ public class ArrayList<T> implements List<T> {
         return newList;
     }
 
+    private T[] grow(int capacity) {
+        T[] newList = (T[]) new Object[capacity];
+        System.arraycopy(list, 0, newList, 0, list.length);
+        return newList;
+    }
+
     private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("Index: " + index + ", size: " + size);
+        }
+    }
+
+    private void ensureCapacity(int minCapacity) {
+        if (list.length < minCapacity) {
+            list = grow(minCapacity);
         }
     }
 }
